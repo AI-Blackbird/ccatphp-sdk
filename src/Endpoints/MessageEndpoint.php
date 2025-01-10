@@ -46,6 +46,11 @@ class MessageEndpoint extends AbstractEndpoint
         $client->text($json);
 
         while (true) {
+
+            if (!$client->isConnected()) {
+                throw new RuntimeException('WebSocket client is not connected');
+            }
+
             $response = $client->receive();
             if ($response === null) {
                 throw new RuntimeException('Error receive message');
