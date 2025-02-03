@@ -219,7 +219,9 @@ class MemoryEndpoint extends AbstractEndpoint
             $query['k'] = $k;
         }
         if ($metadata) {
-            $query['metadata'] = json_encode($metadata, JSON_THROW_ON_ERROR);
+            $query['metadata'] = $metadata;
+        } else {
+            $query['metadata'] = null;
         }
 
         return $this->postJson(
