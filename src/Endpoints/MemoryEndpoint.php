@@ -162,6 +162,10 @@ class MemoryEndpoint extends AbstractEndpoint
      * parameter is the input text for which the memory points are retrieved. The k parameter is the number of memory
      * points to retrieve.
      * If the userId parameter is provided, the memory points are filtered by the user ID.
+     * 
+     * The GET enpoint has been deprecated in favor of the POST endpoint!
+     * 
+     * @deprecated
      *
      * @param array<string, mixed>|null $metadata
      *
@@ -179,7 +183,8 @@ class MemoryEndpoint extends AbstractEndpoint
             $query['k'] = $k;
         }
         if ($metadata) {
-            $query['metadata'] = json_encode($metadata, JSON_THROW_ON_ERROR);
+            //doesn't work with get requests
+            $query['metadata'] = $metadata;
         }
 
         return $this->get(
@@ -188,6 +193,41 @@ class MemoryEndpoint extends AbstractEndpoint
             $agentId,
             $userId,
             $query,
+        );
+    }
+
+    /**  
+     * This endpoint retrieves memory points based on the input text, either for the agent identified by the agentId
+     * parameter (for multi-agent installations) or for the default agent (for single-agent installations). The text
+     * parameter is the input text for which the memory points are retrieved. The k parameter is the number of memory
+     * points to retrieve.
+     * If the userId parameter is provided, the memory points are filtered by the user ID.
+     *
+     * @param array<string, mixed>|null $metadata
+     *
+     * @throws GuzzleException
+     */
+    public function postMemoryRecall(
+        string $text,
+        ?int $k = null,
+        ?array $metadata = null,
+        ?string $agentId = null,
+        ?string $userId = null,
+    ): MemoryRecallOutput {
+        $query = ['text' => $text];
+        if ($k) {
+            $query['k'] = $k;
+        }
+        if ($metadata) {
+            $query['metadata'] = json_encode($metadata, JSON_THROW_ON_ERROR);
+        }
+
+        return $this->postJson(
+            $this->formatUrl('/recall'),
+            MemoryRecallOutput::class,
+            $query,
+            $agentId,
+            $userId,
         );
     }
 
