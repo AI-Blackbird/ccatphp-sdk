@@ -221,6 +221,32 @@ class MemoryEndpointTest extends BaseTest
         self::assertEquals($expected['vectors']['embedder'], $result->vectors->embedder);
     }
 
+    //the same but with postMemoryRecall
+    /**
+     * @throws GuzzleException|Exception|\JsonException
+     */
+    public function testPostMemoryRecallSuccess(): void
+    {
+        $expected = [
+            'query' => ['text' => 'test', 'vector' => []],
+            'vectors' => [
+                'embedder' => 'testEmbedder',
+                'collections' => [
+                    'episodic' => [],
+                    'procedural' => [],
+                    'declarative' => [],
+                ],
+            ],
+        ];
+
+        $cCatClient = $this->getCCatClient($this->apikey, $expected);
+
+        $endpoint = $cCatClient->memory();
+        $result = $endpoint->postMemoryRecall($expected['query']['text']);
+
+        self::assertEquals($expected['vectors']['embedder'], $result->vectors->embedder);
+    }
+
     /**
      * @throws GuzzleException|Exception|\JsonException
      */
