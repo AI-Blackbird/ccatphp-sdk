@@ -4,6 +4,7 @@ namespace Albocode\CcatphpSdk\Endpoints;
 
 use Albocode\CcatphpSdk\DTO\Api\Factory\FactoryObjectSettingOutput;
 use Albocode\CcatphpSdk\DTO\Api\Factory\FactoryObjectSettingsOutput;
+use Albocode\CcatphpSdk\DTO\Api\Embeddings\EmbeddingOutput;
 use Albocode\CcatphpSdk\DTO\SettingInput;
 use GuzzleHttp\Exception\GuzzleException;
 
@@ -56,6 +57,23 @@ class EmbedderEndpoint extends AbstractEndpoint
             FactoryObjectSettingOutput::class,
             $values,
             $this->systemId,
+        );
+    }
+
+    /**
+     * This endpoint embeds a text into a vector.
+     *
+     * @param String $text
+     *
+     * @throws GuzzleException
+     */
+    public function getEmbedText(string $text): EmbeddingOutput
+    {
+        return $this->get(
+            $this->formatUrl('/embedding'),
+            EmbeddingOutput::class,
+            $this->systemId,
+            ['text' => $text],
         );
     }
 }
