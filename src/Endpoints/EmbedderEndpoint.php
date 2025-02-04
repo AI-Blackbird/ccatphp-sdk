@@ -67,13 +67,19 @@ class EmbedderEndpoint extends AbstractEndpoint
      *
      * @throws GuzzleException
      */
-    public function getEmbedText(string $text): EmbeddingOutput
-    {
+    public function getEmbedText(
+        string $text,
+        ?string $agentId = null,
+        ?string $userId = null,
+        ): EmbeddingOutput
+    {   
+        $query['text'] = $text;
         return $this->get(
             $this->formatUrl('/embedding'),
             EmbeddingOutput::class,
-            $this->systemId,
-            ['text' => $text],
+            $agentId,
+            $userId,
+            $query,
         );
     }
 }
